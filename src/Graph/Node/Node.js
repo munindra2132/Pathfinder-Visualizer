@@ -4,14 +4,14 @@ import './Node.css';
 export default class Node extends Component {
     render() {
         const{
-            src,
-            dest,
-            wall,
             col,
+            dest,
+            src,
+            wall,
+            onMouseDown,
+            onMouseEnter,
+            onMouseUp,
             row,
-            pointer_Up,
-            pointer_Down,
-            pointer_Now,
         }=this.props;
 
         const css_style = dest ?'node-dest':src?'node-src':wall?'node-wall':'';
@@ -20,9 +20,9 @@ export default class Node extends Component {
       <div
         id={`node-${row}-${col}`}
         className={`node ${css_style}`}
-        pointer_Down={() => pointer_Down(row, col)}
-        pointer_Now={() => pointer_Now(row, col)}
-        pointer_Up={() => pointer_Up()}>
+        onMouseDown={() => onMouseDown(row, col)}
+        onMouseEnter={() => onMouseEnter(row, col)}
+        onMouseUp={() => onMouseUp()}>
         </div>
     );
     }
