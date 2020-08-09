@@ -7,11 +7,11 @@
 }
 
 .node-dest {
-    background-color: rgb(241, 218, 8);
+    background-color: green;
 }
   
 .node-src {
-    background-color: green;
+    background-color:red;
 }
 
 .node-visited {

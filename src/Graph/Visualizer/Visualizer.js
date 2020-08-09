@@ -4,7 +4,7 @@ import {dijkstra, getNodesInShortestPathOrderDijkstra} from '../Algorithms/dijks
 import {bfs, getNodesInShortestPathOrderBFS } from '../Algorithms/bfs';
 import {dfs, getNodesInShortestPathOrderDFS } from '../Algorithms/dfs';
 import './Visualizer.css';
-
+import { Button } from 'react-bootstrap';
 
 let sr =7;
 let sc =15;
@@ -20,7 +20,7 @@ export default class Visualizer extends Component {
             START_NODE_COL:  15,
             FINISH_NODE_ROW:  18,
             FINISH_NODE_COL: 45,
-
+            done : false,
         }
         
     } 
@@ -44,7 +44,7 @@ export default class Visualizer extends Component {
         this.setState({mouseIsPressed: false});
       }
     
-      animateDijkstra(visitedNodesInOrder,nodesInShortestPathOrder) {
+      animate(visitedNodesInOrder,nodesInShortestPathOrder) {
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
           if (i === visitedNodesInOrder.length) {
             setTimeout(() => {
@@ -54,18 +54,36 @@ export default class Visualizer extends Component {
           }
           setTimeout(() => {
             const node = visitedNodesInOrder[i];
+            if(node.row === this.state.START_NODE_ROW && node.col === this.state.START_NODE_COL) {
+              document.getElementById(`node-${node.row}-${node.col}`).className =
+              'node node-src';
+            }else if(node.row === this.state.FINISH_NODE_ROW && node.col === this.state.FINISH_NODE_COL){
+              document.getElementById(`node-${node.row}-${node.col}`).className =
+              'node node-dest';
+              
+            }else{
             document.getElementById(`node-${node.row}-${node.col}`).className =
               'node node-visited';
+            }
           }, 10 * i);
         }
+        
       }
     
       animateShortestPath(nodesInShortestPathOrder) {
         for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
           setTimeout(() => {
             const node = nodesInShortestPathOrder[i];
+            if(node.row === this.state.START_NODE_ROW && node.col === this.state.START_NODE_COL) {
+              document.getElementById(`node-${node.row}-${node.col}`).className =
+              'node node-src';
+            }else if(node.row === this.state.FINISH_NODE_ROW && node.col === this.state.FINISH_NODE_COL){
+              document.getElementById(`node-${node.row}-${node.col}`).className =
+              'node node-dest'; 
+            }else {
             document.getElementById(`node-${node.row}-${node.col}`).className =
               'node node-shortest-path';
+            }
           }, 50 * i);
         }
       }
@@ -75,8 +93,11 @@ export default class Visualizer extends Component {
         // sc = this.state.START_NODE_COL;
         // fr = this.state.FINISH_NODE_ROW;
         // fc = this.state.FINISH_NODE_COL;
+        if(this.state.done === true){
+          alert("Clear the grid First");
+        }else {
         document.getElementById(`node-${this.state.START_NODE_ROW}-${this.state.START_NODE_COL}`).className =
-              'node node-start';
+              'node node-shortest-path';
         const {grid} = this.state;
         const startNode = grid[this.state.START_NODE_ROW][this.state.START_NODE_COL];
         const finishNode = grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
@@ -84,13 +105,18 @@ export default class Visualizer extends Component {
         
         const nodesInShortestPathOrder = getNodesInShortestPathOrderDijkstra(finishNode);
         // console.log(visitedNodesInOrder);
-        this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+        this.setState({'done' : true});
+        this.animate(visitedNodesInOrder, nodesInShortestPathOrder);
+        }
       }
     
       //the below lines calls the bfs function to traverse the grid
       visualizeBFS() {
         // sr = this.state.START_NODE_ROW;
         // sc = this.state.START_NODE_COL;
+        if(this.state.done === true){
+          alert("Clear the grid First");
+        }else {
         const {grid} = this.state;
         const startNode = grid[this.state.START_NODE_ROW][this.state.START_NODE_COL];
         const finishNode = grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
@@ -98,22 +124,42 @@ export default class Visualizer extends Component {
         const nodesInShortestPathOrder = getNodesInShortestPathOrderBFS(finishNode);
           //console.table(visitedNodesInOrder[0]);
          // alert("BFS is going to execute");
-          this.animateDijkstra(visitedNodesInOrder,nodesInShortestPathOrder);
+         this.setState({'done' : true});
+          this.animate(visitedNodesInOrder,nodesInShortestPathOrder);
          //console.log(visitedNodesInOrder.length);
+        }
       }
 
       visualizeDFS() {
         // sr = this.state.START_NODE_ROW;
         // sc = this.state.START_NODE_COL;
+        if(this.state.done === true){
+          alert("Clear the grid First");
+          console.log("Clear the grid dfs");
+        }else {
         const {grid} = this.state;
         const startNode = grid[this.state.START_NODE_ROW][this.state.START_NODE_COL];
         const finishNode = grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
         const visitedNodesInOrder = dfs(grid,startNode,finishNode);
-        const nodesInShortestPathOrder = getNodesInShortestPathOrderDFS(finishNode);
-          this.animateDijkstra(visitedNodesInOrder,nodesInShortestPathOrder);
+        const nodesInShortestPathOrder = getNodesInShortestPathOrderDFS(finishNode,startNode);
+        this.setState({'done' : true});
+          this.animate(visitedNodesInOrder,nodesInShortestPathOrder);
+        }
       }
-
-
+       
+      
+      cleargrid () {
+        this.componentDidMount();
+        for (let row = 0; row < 20; row++) {
+          for (let col = 0; col < 50; col++) {
+            document.getElementById(`node-${row}-${col}`).className =
+              'node';
+          }
+        }
+        document.getElementById(`node-${this.state.START_NODE_ROW}-${this.state.START_NODE_COL}`).className = 'node node-src';
+        document.getElementById(`node-${this.state.FINISH_NODE_ROW}-${this.state.FINISH_NODE_COL}`).className = 'node node-dest';
+        this.setState({'done' : false});
+      }
       myChangeHandler = (event) => {
         let nam = event.target.name;
         let val = event.target.value;
@@ -124,56 +170,19 @@ export default class Visualizer extends Component {
             const {grid, mouseIsPressed} = this.state;
         
             return (
-              <>
-              {/* /*{ <form >
-              <label>
-                  Start Node :
-                        <label>
-                         X : 
-                         <input
-                         name="START_NODE_ROW"
-                         type="number"
-                         onChange={this.myChangeHandler}
-                         value={this.state.START_NODE_ROW}
-                         />
-                         </label>
-                         <label>
-                         Y : 
-                         <input
-                         name="START_NODE_COL"
-                         type="number"
-                         onChange={this.myChangeHandler}
-                         value = {this.state.START_NODE_COL}
-                         />
-                         </label>
-              </label>
-              <br/>
-              <label>
-                  End Node :
-                        <label>
-                         X : 
-                         <input
-                         name="FINISH_NODE_ROW"
-                         type="number"
-                         onChange={this.myChangeHandler}
-                         value={this.state.FINISH_NODE_ROW}
-                         />
-                         </label>
-                         <label>
-                         Y : 
-                         <input
-                         name="FINISH_NODE_COL"
-                         type="number"
-                         onChange={this.myChangeHandler}
-                         value={this.state.FINISH_NODE_COL}
-                         />
-                         </label>
-              </label><br/>
-              
-             </form>  */}
-             <button onClick={() => this.visualizeDFS() }>
+             <div>
+                <Button variant="info" size="lg" onClick={() => this.visualizeDijkstra() }>
                   Visualize Dijkstra's Algorithm
-                </button>
+                </Button>
+                <Button variant="info" size="lg" onClick={() => this.visualizeDFS() }>
+                  Visualize DFS Algorithm
+                </Button>
+                <Button variant="info" size="lg" onClick={() => this.visualizeBFS() }>
+                  Visualize BFS Algorithm
+                </Button>
+                <Button variant="info" size="lg" onClick={() => this.cleargrid() }>
+                  Clear the GRID
+                </Button>
                 <div className="grid">
                   {grid.map((row, rowIdx) => {
                     return (
@@ -200,7 +209,7 @@ export default class Visualizer extends Component {
                     );
                   })}
                 </div>
-              </>
+                </div>
             );
           }
 }

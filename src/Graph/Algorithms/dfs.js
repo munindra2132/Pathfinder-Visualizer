@@ -39,7 +39,7 @@ export function dfs(grid,startnode,finishnode){
 
     while( !stack.isEmpty()){
          var currentnode = stack.pop();
-         if(currentnode.isVisited === true) continue;
+         if(currentnode.isVisited === true || currentnode.wall === true) continue;
 
          currentnode.isVisited = true;
          visitedNodesInOrder.push(currentnode);
@@ -69,12 +69,13 @@ export function dfs(grid,startnode,finishnode){
     return visitedNodesInOrder;
 }
 //the below function finds the shortest path by connecting the previous nodes which were found during the graph traversal algorithm
-export function getNodesInShortestPathOrderDFS(finishnode){
+export function getNodesInShortestPathOrderDFS(finishnode,startnode){
     const nodesInShortestPathOrder = [];
     let current = finishnode;
     while(current != null){
+        
         nodesInShortestPathOrder.unshift(current);
-        console.log(current);
+        //console.log(current);
       current = current.previousNode;
       
     }
