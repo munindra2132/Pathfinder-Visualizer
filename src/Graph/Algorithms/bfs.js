@@ -14,7 +14,9 @@ export function bfs(grid,startnode,finishnode) {
 
         currentnode.isVisited = true;
         visitedNodesInOrder.push(currentnode);
-        if(currentnode === finishnode) return visitedNodesInOrder;
+        if(currentnode === finishnode) {
+            return visitedNodesInOrder;
+        }
         
         const {row, col} = currentnode;
         
@@ -39,8 +41,8 @@ export function bfs(grid,startnode,finishnode) {
     return visitedNodesInOrder;
 
 }
-
-export function pathtodest(finishnode){
+//the below function finds the shortest path by connecting the previous nodes which were found during the graph traversal algorithm
+export function getNodesInShortestPathOrderBFS(finishnode){
     const nodesInShortestPathOrder = [];
     let current = finishnode;
     while(current != null){

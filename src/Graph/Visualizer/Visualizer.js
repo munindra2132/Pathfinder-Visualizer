@@ -1,14 +1,15 @@
 import React , {Component} from 'react';
 import Node from '../Node/Node.js';
-import {dijkstra, getNodesInShortestPathOrder} from '../Algorithms/dijkstra';
-import {bfs, pathtodest } from '../Algorithms/bfs';
+import {dijkstra, getNodesInShortestPathOrderDijkstra} from '../Algorithms/dijkstra';
+import {bfs, getNodesInShortestPathOrderBFS } from '../Algorithms/bfs';
+import {dfs, getNodesInShortestPathOrderDFS } from '../Algorithms/dfs';
 import './Visualizer.css';
 
 
 let sr =7;
 let sc =15;
-let fr = 10;
-let fc = 15;
+let fr = 18;
+let fc = 45;
 export default class Visualizer extends Component {
     constructor(props){
         super(props);
@@ -17,8 +18,8 @@ export default class Visualizer extends Component {
             mouseIsPressed:false,
             START_NODE_ROW: 7,
             START_NODE_COL:  15,
-            FINISH_NODE_ROW:  10,
-            FINISH_NODE_COL: 15,
+            FINISH_NODE_ROW:  18,
+            FINISH_NODE_COL: 45,
 
         }
         
@@ -48,7 +49,7 @@ export default class Visualizer extends Component {
           if (i === visitedNodesInOrder.length) {
             setTimeout(() => {
               this.animateShortestPath(nodesInShortestPathOrder);
-            }, 25 * i);
+            }, 10 * i);
             return;
           }
           setTimeout(() => {
@@ -68,7 +69,7 @@ export default class Visualizer extends Component {
           }, 50 * i);
         }
       }
-    
+    //the below lines 
       visualizeDijkstra() {
         // sr = this.state.START_NODE_ROW;
         // sc = this.state.START_NODE_COL;
@@ -81,11 +82,12 @@ export default class Visualizer extends Component {
         const finishNode = grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
         const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
         
-        const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+        const nodesInShortestPathOrder = getNodesInShortestPathOrderDijkstra(finishNode);
         // console.log(visitedNodesInOrder);
         this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
       }
     
+      //the below lines calls the bfs function to traverse the grid
       visualizeBFS() {
         // sr = this.state.START_NODE_ROW;
         // sc = this.state.START_NODE_COL;
@@ -93,15 +95,25 @@ export default class Visualizer extends Component {
         const startNode = grid[this.state.START_NODE_ROW][this.state.START_NODE_COL];
         const finishNode = grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
         const visitedNodesInOrder = bfs(grid,startNode,finishNode);
-        const nodesInShortestPathOrder = pathtodest(finishNode);
+        const nodesInShortestPathOrder = getNodesInShortestPathOrderBFS(finishNode);
           //console.table(visitedNodesInOrder[0]);
          // alert("BFS is going to execute");
-         //alert(visitedNodesInOrder);
           this.animateDijkstra(visitedNodesInOrder,nodesInShortestPathOrder);
-
-          
          //console.log(visitedNodesInOrder.length);
       }
+
+      visualizeDFS() {
+        // sr = this.state.START_NODE_ROW;
+        // sc = this.state.START_NODE_COL;
+        const {grid} = this.state;
+        const startNode = grid[this.state.START_NODE_ROW][this.state.START_NODE_COL];
+        const finishNode = grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
+        const visitedNodesInOrder = dfs(grid,startNode,finishNode);
+        const nodesInShortestPathOrder = getNodesInShortestPathOrderDFS(finishNode);
+          this.animateDijkstra(visitedNodesInOrder,nodesInShortestPathOrder);
+      }
+
+
       myChangeHandler = (event) => {
         let nam = event.target.name;
         let val = event.target.value;
@@ -159,7 +171,7 @@ export default class Visualizer extends Component {
               </label><br/>
               
              </form>  */}
-             <button onClick={() => this.visualizeBFS() }>
+             <button onClick={() => this.visualizeDFS() }>
                   Visualize Dijkstra's Algorithm
                 </button>
                 <div className="grid">
