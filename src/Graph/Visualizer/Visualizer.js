@@ -219,6 +219,9 @@ export default class Visualizer extends Component {
         }
       }
        
+      refresh (){
+          window.location.reload(false);  
+      }
       
       cleargrid () {
        // const {grid} = this.state;
@@ -249,7 +252,9 @@ export default class Visualizer extends Component {
               <Navbar bg="dark" variant="dark">
               <Navbar.Brand href="#home">
               {' '}
+              <div onClick={() => this.refresh() }>
               Pathfinding Visualizer
+              </div>
              </Navbar.Brand>
              </Navbar>
                <div>
