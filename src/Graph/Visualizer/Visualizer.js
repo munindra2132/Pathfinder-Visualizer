@@ -14,6 +14,7 @@ let sr =7;
 let sc =15;
 let fr = 18;
 let fc = 45;
+
 export default class Visualizer extends Component {
     constructor(props){
         super(props);
@@ -27,9 +28,11 @@ export default class Visualizer extends Component {
             done: false,
             changedSource: false,
             changedDest: false,
+            stop: false,
         }
         
     } 
+    
     componentDidMount() {
         const grid = getInitialGrid();
         this.setState({grid});
@@ -46,8 +49,8 @@ export default class Visualizer extends Component {
             START_NODE_COL: col,
             changedSource: false
           }, () =>{
-            console.log("changed source true section");
-            console.log(this.state.START_NODE_ROW);
+            //console.log("changed source true section");
+            //console.log(this.state.START_NODE_ROW);
           } );
          
           //console.log(this.state.START_NODE_ROW);
@@ -60,8 +63,8 @@ export default class Visualizer extends Component {
             FINISH_NODE_COL: col,
             changedDest: false
           }, () =>{
-            console.log("changed dest true section");
-            console.log(this.state.FINISH_NODE_ROW);
+            //console.log("changed dest true section");
+            //console.log(this.state.FINISH_NODE_ROW);
           } );
         }else if(row === this.state.START_NODE_ROW && col === this.state.START_NODE_COL && this.state.changedSource === false ){ 
           
@@ -117,14 +120,16 @@ export default class Visualizer extends Component {
       }
     
       animate(visitedNodesInOrder,nodesInShortestPathOrder) {
+        
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+          
           if (i === visitedNodesInOrder.length) {
             setTimeout(() => {
               this.animateShortestPath(nodesInShortestPathOrder);
             }, 10 * i);
             return;
           }
-          setTimeout(() => {
+             setTimeout(() => {
             const node = visitedNodesInOrder[i];
             if(node.row === this.state.START_NODE_ROW && node.col === this.state.START_NODE_COL) {
               document.getElementById(`node-${node.row}-${node.col}`).className =
@@ -139,12 +144,13 @@ export default class Visualizer extends Component {
             }
           }, 10 * i);
         }
-        
+      
       }
     
       animateShortestPath(nodesInShortestPathOrder) {
         for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
-          setTimeout(() => {
+          
+            setTimeout(() => {
             const node = nodesInShortestPathOrder[i];
             if(node.row === this.state.START_NODE_ROW && node.col === this.state.START_NODE_COL) {
               document.getElementById(`node-${node.row}-${node.col}`).className =
@@ -157,6 +163,7 @@ export default class Visualizer extends Component {
               'node node-shortest-path';
             }
           }, 50 * i);
+        
         }
       }
     //the below lines 
@@ -205,7 +212,7 @@ export default class Visualizer extends Component {
         // sc = this.state.START_NODE_COL;
         if(this.state.done === true){
           alert("Clear the grid First");
-          console.log("Clear the grid dfs");
+          // console.log("Clear the grid dfs");
           
         }else {
           console.log(this.state.START_NODE_ROW);
@@ -222,12 +229,12 @@ export default class Visualizer extends Component {
       refresh (){
           window.location.reload(false);  
       }
-      
+    
       cleargrid () {
        // const {grid} = this.state;
-      
-        console.log("this is the clear grid");
-        console.log(this.state.START_NODE_ROW);
+          
+        // console.log("this is the clear grid");
+        // console.log(this.state.START_NODE_ROW);
         sr = this.state.START_NODE_ROW;
         sc = this.state.START_NODE_COL;
         fr = this.state.FINISH_NODE_ROW;
@@ -242,7 +249,7 @@ export default class Visualizer extends Component {
         }
         document.getElementById(`node-${this.state.START_NODE_ROW}-${this.state.START_NODE_COL}`).className = 'node node-src';
         document.getElementById(`node-${this.state.FINISH_NODE_ROW}-${this.state.FINISH_NODE_COL}`).className = 'node node-dest';
-        this.setState({'done' : false});
+        this.setState({'done' : false });
       }
     
         render() {
@@ -268,6 +275,9 @@ export default class Visualizer extends Component {
                 <Button variant="success" size="lg" onClick={() => this.visualizeBFS() }>
                   Visualize BFS Algorithm
                 </Button>{'   '}
+                {/* <Button variant="info" size="lg" onClick={() => this.stop() }>
+                  Stop
+                </Button>{''} */}
                 <Button variant="info" size="lg" onClick={() => this.cleargrid() }>
                   Clear the GRID
                 </Button>
@@ -307,6 +317,7 @@ export default class Visualizer extends Component {
                   })}
                 </div>
                 </div>
+                <a href='https://www.freepik.com/vectors/abstract'>Abstract vector created by BiZkettE1 - www.freepik.com</a>
             </div>
             );
           }
