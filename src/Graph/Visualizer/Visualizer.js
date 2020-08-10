@@ -4,7 +4,11 @@ import {dijkstra, getNodesInShortestPathOrderDijkstra} from '../Algorithms/dijks
 import {bfs, getNodesInShortestPathOrderBFS } from '../Algorithms/bfs';
 import {dfs, getNodesInShortestPathOrderDFS } from '../Algorithms/dfs';
 import './Visualizer.css';
-import { Button } from 'react-bootstrap';
+import red from '../Img/Red.png';
+import green from '../Img/green.png';
+import yellow from '../Img/yellow.jpeg';
+import blue from '../Img/blue.png';
+import {Button , Navbar, Image} from 'react-bootstrap';
 
 let sr =7;
 let sc =15;
@@ -202,6 +206,7 @@ export default class Visualizer extends Component {
         if(this.state.done === true){
           alert("Clear the grid First");
           console.log("Clear the grid dfs");
+          
         }else {
           console.log(this.state.START_NODE_ROW);
         const {grid} = this.state;
@@ -240,20 +245,36 @@ export default class Visualizer extends Component {
         render() {
             const {grid, mouseIsPressed} = this.state;
         
-            return (
-             <div>
-                <Button variant="info" size="lg" onClick={() => this.visualizeDijkstra() }>
+            return ( <div>
+              <Navbar bg="dark" variant="dark">
+              <Navbar.Brand href="#home">
+              {' '}
+              Pathfinding Visualizer
+             </Navbar.Brand>
+             </Navbar>
+               <div>
+               <div className="button">
+                <Button variant="success" size="lg" onClick={() => this.visualizeDijkstra() }>
                   Visualize Dijkstra's Algorithm
-                </Button>
-                <Button variant="info" size="lg" onClick={() => this.visualizeDFS() }>
+                </Button>{'   '}
+                <Button variant="success" size="lg" onClick={() => this.visualizeDFS() }>
                   Visualize DFS Algorithm
-                </Button>
-                <Button variant="info" size="lg" onClick={() => this.visualizeBFS() }>
+                </Button>{'   '}
+                <Button variant="success" size="lg" onClick={() => this.visualizeBFS() }>
                   Visualize BFS Algorithm
-                </Button>
+                </Button>{'   '}
                 <Button variant="info" size="lg" onClick={() => this.cleargrid() }>
                   Clear the GRID
                 </Button>
+                </div>
+                <div className=" info ">
+                <h3>
+                Source Node -  <Image src={red} roundedCircle width="25" height="25"/>{' '}
+                Destination Node -  <Image src={green} roundedCircle width="25" height="25"/>{' '}
+                Path from source to destination -  <Image src={yellow} roundedCircle width="25" height="25"/>{' '}
+                Obstacle - <Image src={blue} roundedCircle width="25" height="25"/>
+                </h3>
+                </div>
                 <div className="grid">
                   {grid.map((row, rowIdx) => {
                     return (
@@ -279,6 +300,7 @@ export default class Visualizer extends Component {
                       </div>
                     );
                   })}
+                </div>
                 </div>
             </div>
             );
