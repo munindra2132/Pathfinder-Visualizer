@@ -20,7 +20,9 @@ export default class Visualizer extends Component {
             START_NODE_COL:  15,
             FINISH_NODE_ROW:  18,
             FINISH_NODE_COL: 45,
-            done : false,
+            done: false,
+            changedSource: false,
+            changedDest: false,
         }
         
     } 
@@ -30,18 +32,64 @@ export default class Visualizer extends Component {
       }
     
       handleMouseDown(row, col) {
+        const node = this.state.grid[row][col];
+        if(this.state.changedSource === true){
+         
+          document.getElementById(`node-${node.row}-${node.col}`).className =
+          'node node-src';
+          this.setState({
+            START_NODE_ROW: row,
+            START_NODE_COL: col,
+            changedSource: false
+          }, () =>{
+            console.log("changed source true section");
+            console.log(this.state.START_NODE_ROW);
+          } );
+         
+          //console.log(this.state.START_NODE_ROW);
+          //console.log(row);
+        }else if(row === this.state.START_NODE_ROW && col === this.state.START_NODE_COL && this.state.changedSource === false ){ 
+          
+          const newGrid = setPreviousSourcef(this.state.grid,row,col);
+         
+          //console.log(this.state.START_NODE_ROW);
+          this.setState({
+            grid: newGrid,
+            changedSource: true
+          }, () => {
+            console.log("Current start node row ");
+            console.log(this.state.START_NODE_ROW);
+            });
+        }else{
         const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
-        this.setState({grid: newGrid, mouseIsPressed: true});
+        this.setState({grid: newGrid, mouseIsPressed: true}, () =>{
+          console.log("state changed");
+        });
+        }
+       
       }
     
       handleMouseEnter(row, col) {
+        if(this.state.changedSource === false){
         if (!this.state.mouseIsPressed) return;
         const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
         this.setState({grid: newGrid});
+        }
       }
     
-      handleMouseUp() {
+      handleMouseUp(row,col) {
+        
+        if (this.state.changedSource === true){
+          // const {grid} = this.state;
+          // const node = grid[row][col];
+          
+          // document.getElementById(`node-${node.row}-${node.col}`).className =
+          //     'node';
+          // this.setState({changedSource: false});
+          console.log("changed source true section mouseup");
+        }else {
         this.setState({mouseIsPressed: false});
+        }
       }
     
       animate(visitedNodesInOrder,nodesInShortestPathOrder) {
@@ -89,10 +137,7 @@ export default class Visualizer extends Component {
       }
     //the below lines 
       visualizeDijkstra() {
-        // sr = this.state.START_NODE_ROW;
-        // sc = this.state.START_NODE_COL;
-        // fr = this.state.FINISH_NODE_ROW;
-        // fc = this.state.FINISH_NODE_COL;
+       
         if(this.state.done === true){
           alert("Clear the grid First");
         }else {
@@ -117,6 +162,7 @@ export default class Visualizer extends Component {
         if(this.state.done === true){
           alert("Clear the grid First");
         }else {
+          console.log(this.state.START_NODE_ROW);
         const {grid} = this.state;
         const startNode = grid[this.state.START_NODE_ROW][this.state.START_NODE_COL];
         const finishNode = grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
@@ -137,6 +183,7 @@ export default class Visualizer extends Component {
           alert("Clear the grid First");
           console.log("Clear the grid dfs");
         }else {
+          console.log(this.state.START_NODE_ROW);
         const {grid} = this.state;
         const startNode = grid[this.state.START_NODE_ROW][this.state.START_NODE_COL];
         const finishNode = grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
@@ -149,11 +196,18 @@ export default class Visualizer extends Component {
        
       
       cleargrid () {
+       // const {grid} = this.state;
+      
+        console.log("this is the clear grid");
+        console.log(this.state.START_NODE_ROW);
+        sr = this.state.START_NODE_ROW;
+        sc = this.state.START_NODE_COL;
         this.componentDidMount();
+        const grid = getInitialGrid();
+        this.setState({grid});
         for (let row = 0; row < 20; row++) {
           for (let col = 0; col < 50; col++) {
-            document.getElementById(`node-${row}-${col}`).className =
-              'node';
+            document.getElementById(`node-${row}-${col}`).className = 'node';
           }
         }
         document.getElementById(`node-${this.state.START_NODE_ROW}-${this.state.START_NODE_COL}`).className = 'node node-src';
@@ -201,7 +255,7 @@ export default class Visualizer extends Component {
                               onMouseEnter={(row, col) =>
                                 this.handleMouseEnter(row, col)
                               }
-                              onMouseUp={() => this.handleMouseUp()}
+                              onMouseUp={(row,col) => this.handleMouseUp(row,col)}
                               row={row}></Node>
                           );
                         })}
@@ -209,7 +263,7 @@ export default class Visualizer extends Component {
                     );
                   })}
                 </div>
-                </div>
+            </div>
             );
           }
 }
@@ -236,6 +290,16 @@ const getInitialGrid = () => {
       previousNode: null,
     };
   };
+  const setPreviousSourcef = (grid,row,col) => {
+    const newGrid = grid.slice();
+    const node = newGrid[row][col];
+    const newNode = {
+      ...node,
+      src: false,
+    }
+    newGrid[row][col] = newNode;
+    return newGrid;
+  }; 
   const getNewGridWithWallToggled = (grid, row, col) => {
     const newGrid = grid.slice();
     const node = newGrid[row][col];

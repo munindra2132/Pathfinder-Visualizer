@@ -37,7 +37,7 @@ export function bfs(grid,startnode,finishnode) {
             grid[row][col+1].previousNode = currentnode;
         }
     }
-
+ 
     return visitedNodesInOrder;
 
 }
@@ -47,7 +47,7 @@ export function getNodesInShortestPathOrderBFS(finishnode){
     let current = finishnode;
     while(current != null){
         nodesInShortestPathOrder.unshift(current);
-        console.log(current);
+        //console.log(current);
       current = current.previousNode;
       
     }
