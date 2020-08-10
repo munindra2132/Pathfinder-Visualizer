@@ -48,29 +48,52 @@ export default class Visualizer extends Component {
          
           //console.log(this.state.START_NODE_ROW);
           //console.log(row);
+        }else if(this.state.changedDest === true){
+          document.getElementById(`node-${node.row}-${node.col}`).className =
+          'node node-dest';
+          this.setState({
+            FINISH_NODE_ROW: row,
+            FINISH_NODE_COL: col,
+            changedDest: false
+          }, () =>{
+            console.log("changed dest true section");
+            console.log(this.state.FINISH_NODE_ROW);
+          } );
         }else if(row === this.state.START_NODE_ROW && col === this.state.START_NODE_COL && this.state.changedSource === false ){ 
           
-          const newGrid = setPreviousSourcef(this.state.grid,row,col);
-         
-          //console.log(this.state.START_NODE_ROW);
-          this.setState({
-            grid: newGrid,
-            changedSource: true
-          }, () => {
-            console.log("Current start node row ");
-            console.log(this.state.START_NODE_ROW);
-            });
-        }else{
-        const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
-        this.setState({grid: newGrid, mouseIsPressed: true}, () =>{
-          console.log("state changed");
+              const newGrid = setPreviousSourcef(this.state.grid,row,col);
+              document.getElementById(`node-${node.row}-${node.col}`).className ='node';
+              //console.log(this.state.START_NODE_ROW);
+              this.setState({
+                  grid: newGrid,
+                  changedSource: true
+              }, () => {
+              console.log("Current start node row ");
+               console.log(this.state.START_NODE_ROW);
+              });
+        }else if(row === this.state.FINISH_NODE_ROW && col === this.state.FINISH_NODE_COL && this.state.changedDest === false ){ 
+          
+               const newGrid = setPreviousDestf(this.state.grid,row,col);
+               document.getElementById(`node-${node.row}-${node.col}`).className ='node';
+               //console.log(this.state.START_NODE_ROW);
+               this.setState({
+               grid: newGrid,
+               changedDest: true
+               }, () => {
+               console.log("Current finish node row ");
+               console.log(this.state.FINISH_NODE_ROW);
+          });
+         }else{
+                const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+                this.setState({grid: newGrid, mouseIsPressed: true}, () =>{
+                console.log("state changed");
         });
         }
        
       }
     
       handleMouseEnter(row, col) {
-        if(this.state.changedSource === false){
+        if(this.state.changedSource === false || this.state.changedDest === false){
         if (!this.state.mouseIsPressed) return;
         const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
         this.setState({grid: newGrid});
@@ -80,13 +103,10 @@ export default class Visualizer extends Component {
       handleMouseUp(row,col) {
         
         if (this.state.changedSource === true){
-          // const {grid} = this.state;
-          // const node = grid[row][col];
-          
-          // document.getElementById(`node-${node.row}-${node.col}`).className =
-          //     'node';
-          // this.setState({changedSource: false});
+           //changing the source
           console.log("changed source true section mouseup");
+        }else if(this.state.changedDest === true){
+           //changing destination
         }else {
         this.setState({mouseIsPressed: false});
         }
@@ -202,6 +222,8 @@ export default class Visualizer extends Component {
         console.log(this.state.START_NODE_ROW);
         sr = this.state.START_NODE_ROW;
         sc = this.state.START_NODE_COL;
+        fr = this.state.FINISH_NODE_ROW;
+        fc = this.state.FINISH_NODE_COL;
         this.componentDidMount();
         const grid = getInitialGrid();
         this.setState({grid});
@@ -214,12 +236,7 @@ export default class Visualizer extends Component {
         document.getElementById(`node-${this.state.FINISH_NODE_ROW}-${this.state.FINISH_NODE_COL}`).className = 'node node-dest';
         this.setState({'done' : false});
       }
-      myChangeHandler = (event) => {
-        let nam = event.target.name;
-        let val = event.target.value;
-        this.setState({[nam]: val});
-      }
-
+    
         render() {
             const {grid, mouseIsPressed} = this.state;
         
@@ -296,6 +313,16 @@ const getInitialGrid = () => {
     const newNode = {
       ...node,
       src: false,
+    }
+    newGrid[row][col] = newNode;
+    return newGrid;
+  }; 
+  const setPreviousDestf = (grid,row,col) => {
+    const newGrid = grid.slice();
+    const node = newGrid[row][col];
+    const newNode = {
+      ...node,
+      dest: false,
     }
     newGrid[row][col] = newNode;
     return newGrid;
