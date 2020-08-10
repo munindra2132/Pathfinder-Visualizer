@@ -10,16 +10,22 @@ This project helps us to visualize us to see all the paths taken by the algorith
 
 Here are some pictures of the project while working
 
+## The default grid
 ![](images/base.png)
 
+## During BFS traversal
 ![](images/bfsd.png)
 
+## Forming the path between source and destination
 ![](images/bfsdone.png)
 
+## After formed the path
 ![](images/bfsf.png)
 
+## DFS traversal
 ![](images/dfs.png)
 
+## The complete path of DFS traversal
 ![](images/dfsd.png)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
