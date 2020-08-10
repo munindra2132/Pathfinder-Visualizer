@@ -17,10 +17,10 @@ Here are some pictures of the project while working
 ![](images/bfsd.png)
 
 ## Forming the path between source and destination
-![](images/bfsdone.png)
+![](images/bfsf.png)
 
 ## After formed the path
-![](images/bfsf.png)
+![](images/bfsdone.png)
 
 ## DFS traversal
 ![](images/dfs.png)
