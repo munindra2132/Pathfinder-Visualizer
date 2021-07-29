@@ -1,5 +1,6 @@
 # Pathfinder Visualizer
-
+## UPD -
+   The project has been deployed and can be accessed by viewing this site - [link](https://munindra2132.github.io/Pathfinder-Visualizer) 
 ### About - 
 This project helps us to visualize us to see all the paths taken by the algorithm before reaching the destination. By viewing the results we can visually verify the efficiency of the algorithm while it executes. The algorithms visualized in this proejct are 
 ```
